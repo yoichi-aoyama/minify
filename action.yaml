@@ -1,0 +1,16 @@
+name: "minify action"
+description: "minify action"
+inputs:
+    src:
+        description: "source directory"
+        required: true
+        default: ""
+    dist:
+        description: "destination directory"
+        required: true
+        default: ""
+runs:
+    using: "composite"
+    steps:
+        - run: go run ${{ github.action_path }}/main.go ${{ inputs.src }} ${{ inputs.dist }}
+          shell: bash
