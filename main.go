@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -18,9 +19,41 @@ import (
 
 func main() {
 	fmt.Println("- minify start -")
+
 	inputPath := "./src"
 	outputPath := "./dist"
 
+	flag.Parse()
+	args := flag.Args()
+	if len(args) == 1 {
+		fmt.Println("Please specify param2")
+		os.Exit(1)
+	}
+	if len(args) == 2 {
+		inputPath = args[0]
+		outputPath = args[1]
+	}
+
+	if f, err := os.Stat(inputPath); os.IsNotExist(err) || !f.IsDir() {
+		fmt.Printf("directory %s does not exist \n", inputPath)
+		os.Exit(1)
+	}
+
+	if f, err := os.Stat(outputPath); os.IsNotExist(err) || !f.IsDir() {
+		fmt.Printf("directory %s does not exist \n", outputPath)
+		os.Exit(1)
+	}
+
+	err := executeMinify(inputPath, outputPath)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	fmt.Println("- minify finish -")
+}
+
+func executeMinify(inputPath string, outputPath string) error {
 	// setup minify
 	m := minify.New()
 	m.AddFunc("text/css", css.Minify)
@@ -30,16 +63,6 @@ func main() {
 	m.AddFuncRegexp(regexp.MustCompile("[/+]json$"), json.Minify)
 	m.AddFuncRegexp(regexp.MustCompile("[/+]xml$"), xml.Minify)
 
-	err := executeMinify(m, inputPath, outputPath)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	fmt.Println("- minify finish -")
-}
-
-func executeMinify(m *minify.M, inputPath string, outputPath string) error {
 	fmt.Println("executeMinify")
 	var mediaType string
 	err := filepath.Walk(inputPath, func(path string, info os.FileInfo, err error) error {
