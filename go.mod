@@ -1,6 +1,6 @@
 module github.com/yoichi-aoyama/minify
 
-go 1.21.5
+go 1.21
 
 require (
 	github.com/tdewolff/minify/v2 v2.20.9 // indirect
