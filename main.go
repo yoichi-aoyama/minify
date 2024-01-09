@@ -39,10 +39,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	if f, err := os.Stat(outputPath); os.IsNotExist(err) || !f.IsDir() {
-		fmt.Printf("directory %s does not exist \n", outputPath)
-		os.Exit(1)
-	}
+	//	if f, err := os.Stat(outputPath); os.IsNotExist(err) || !f.IsDir() {
+	//		fmt.Printf("directory %s does not exist \n", outputPath)
+	//		os.Exit(1)
+	//	}
 
 	err := executeMinify(inputPath, outputPath)
 	if err != nil {
